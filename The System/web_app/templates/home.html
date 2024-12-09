@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Welcome, {{ user.name }}!</h1>
+    <h2>Level: {{ user.level }}</h2>
+    <h3>Stats:</h3>
+    <ul>
+        {% for key, value in user.stats.items() %}
+        <li>{{ key }}: {{ value }}</li>
+        {% endfor %}
+    </ul>
+    <h3>Quests:</h3>
+    <ul>
+        {% for quest in user.quests %}
+        <li>{{ loop.index }}. {{ quest[0] }} to improve {{ quest[1] }}
+            {% if loop.index0 not in user.completed_quests %}
+            <form action="{{ url_for('complete_quest', quest_index=loop.index0) }}" method="POST">
+                <button type="submit">Complete</button>
+            </form>
+            {% else %}
+            - Completed
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</body>
+</html>
